@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>简易 AI 文本情绪识别器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft Yahei", sans-serif;
+        }
+        body {
+            background-color: #f4f7fa;
+            padding: 30px 20px;
+        }
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #222;
+            margin-bottom: 24px;
+        }
+        .tip {
+            text-align: center;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 120px;
+            padding: 14px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            resize: none;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            margin-top: 16px;
+            border: none;
+            border-radius: 10px;
+            background-color: #4285f4;
+            color: #fff;
+            font-size: 17px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        button:hover {
+            background-color: #2b6cd9;
+        }
+        .result-box {
+            margin-top: 24px;
+            padding: 18px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .positive {
+            background: #e6f7ee;
+            color: #189b54;
+        }
+        .negative {
+            background: #fce9e9;
+            color: #d63031;
+        }
+        .empty {
+            background: #f8f9fc;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>简易 AI 文本情绪识别器</h1>
+        <p class="tip">输入一句话，AI 判断情绪：正面 / 负面</p>
+        <textarea id="inputText" placeholder="在这里输入文本，例如：今天超开心！"></textarea>
+        <button onclick="predictSentiment()">开始识别</button>
+        <div id="resultBox" class="result-box empty">等待输入内容</div>
+    </div>
+    <script>
+        const positiveWords = ["开心", "快乐", "太棒", "喜欢", "美好", "不错", "厉害", "惊喜", "幸福", "好耶"];
+        const negativeWords = ["难过", "糟糕", "讨厌", "崩溃", "难受", "差劲", "烦死", "生气", "失望", "糟透"];
+        function predictSentiment() {
+            const text = document.getElementById("inputText").value;
+            const resultBox = document.getElementById("resultBox");
+            if (!text.trim()) {
+                resultBox.innerText = "请先输入文本！";
+                resultBox.className = "result-box empty";
+                return;
+            }
+            let posCount = 0;
+            let negCount = 0;
+            for (const word of positiveWords) {
+                if (text.includes(word)) posCount++;
+            }
+            for (const word of negativeWords) {
+                if (text.includes(word)) negCount++;
+            }
+            if (posCount > negCount) {
+                resultBox.innerText = `AI 识别结果：正面情绪（正面词：${posCount}，负面词：${negCount}）`;
+                resultBox.className = "result-box positive";
+            } else if (negCount > posCount) {
+                resultBox.innerText = `AI 识别结果：负面情绪（正面词：${posCount}，负面词：${negCount}）`;
+                resultBox.className = "result-box negative";
+            } else {
+                resultBox.innerText = `AI 识别结果：中性/难以判定（正面词：${posCount}，负面词：${negCount}）`;
+                resultBox.className = "result-box empty";
+            }
+        }
+    </script>
+</body>
+</html>
